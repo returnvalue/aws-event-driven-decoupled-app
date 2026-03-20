@@ -48,3 +48,12 @@ resource "aws_sqs_queue" "order_queue" {
     Name = "order-processing-queue"
   }
 }
+
+# SNS Topic: Event broadcast hub
+resource "aws_sns_topic" "order_topic" {
+  name = "order-events-topic"
+
+  tags = {
+    Name = "order-events-topic"
+  }
+}
