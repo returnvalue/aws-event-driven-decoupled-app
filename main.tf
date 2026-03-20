@@ -185,3 +185,16 @@ resource "aws_lambda_event_source_mapping" "sqs_trigger" {
   function_name    = aws_lambda_function.order_processor.arn
   batch_size       = 10
 }
+
+# Outputs: Key resource identifiers for the event-driven architecture
+output "sns_topic_arn" {
+  value = aws_sns_topic.order_topic.arn
+}
+
+output "sqs_queue_url" {
+  value = aws_sqs_queue.order_queue.id
+}
+
+output "s3_bucket_name" {
+  value = aws_s3_bucket.order_data.id
+}
