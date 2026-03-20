@@ -57,3 +57,10 @@ resource "aws_sns_topic" "order_topic" {
     Name = "order-events-topic"
   }
 }
+
+# SNS Subscription: Connects Topic to Queue
+resource "aws_sns_topic_subscription" "order_subscription" {
+  topic_arn = aws_sns_topic.order_topic.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.order_queue.arn
+}
