@@ -178,3 +178,10 @@ resource "aws_lambda_function" "order_processor" {
     Name = "order-processor"
   }
 }
+
+# Event Source Mapping: Triggers Lambda when messages arrive in SQS
+resource "aws_lambda_event_source_mapping" "sqs_trigger" {
+  event_source_arn = aws_sqs_queue.order_queue.arn
+  function_name    = aws_lambda_function.order_processor.arn
+  batch_size       = 10
+}
