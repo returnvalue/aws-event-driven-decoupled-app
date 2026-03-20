@@ -90,3 +90,12 @@ resource "aws_sqs_queue_policy" "order_queue_policy" {
 }
 POLICY
 }
+
+# S3 Bucket: Persistent storage for order data
+resource "aws_s3_bucket" "order_data" {
+  bucket = "order-events-data-store"
+
+  tags = {
+    Name = "order-events-data-store"
+  }
+}
