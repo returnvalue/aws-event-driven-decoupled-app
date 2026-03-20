@@ -159,3 +159,22 @@ resource "aws_iam_role_policy" "lambda_policy" {
 }
 EOF
 }
+
+# Lambda Function: The processing logic for our order events
+resource "aws_lambda_function" "order_processor" {
+  filename      = "function.zip"
+  function_name = "order-processor"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "index.handler"
+  runtime       = "python3.9"
+
+  environment {
+    variables = {
+      S3_BUCKET = aws_s3_bucket.order_data.id
+    }
+  }
+
+  tags = {
+    Name = "order-processor"
+  }
+}
