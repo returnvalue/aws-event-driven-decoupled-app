@@ -120,3 +120,42 @@ resource "aws_iam_role" "lambda_role" {
 }
 EOF
 }
+
+# IAM Policy: Permissions for SQS, S3, and CloudWatch
+resource "aws_iam_role_policy" "lambda_policy" {
+  name = "order-processor-lambda-policy"
+  role = aws_iam_role.lambda_role.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+      ],
+      "Resource": "${aws_sqs_queue.order_queue.arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Resource": "${aws_s3_bucket.order_data.arn}/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*"
+    }
+  ]
+}
+EOF
+}
