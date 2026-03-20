@@ -64,3 +64,29 @@ resource "aws_sns_topic_subscription" "order_subscription" {
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.order_queue.arn
 }
+
+# SQS Policy: Allows SNS to send messages to the queue
+resource "aws_sqs_queue_policy" "order_queue_policy" {
+  queue_url = aws_sqs_queue.order_queue.id
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Id": "sqspolicy",
+  "Statement": [
+    {
+      "Sid": "First",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "sqs:SendMessage",
+      "Resource": "${aws_sqs_queue.order_queue.arn}",
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": "${aws_sns_topic.order_topic.arn}"
+        }
+      }
+    }
+  ]
+}
+POLICY
+}
