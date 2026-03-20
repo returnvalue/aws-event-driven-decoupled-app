@@ -35,3 +35,16 @@ provider "aws" {
     autoscaling    = "http://localhost:4566"
   }
 }
+
+# SQS Queue: Decoupled message buffer
+resource "aws_sqs_queue" "order_queue" {
+  name                      = "order-processing-queue"
+  delay_seconds             = 0
+  max_message_size          = 262144 # 256 KB
+  message_retention_seconds = 345600 # 4 days
+  receive_wait_time_seconds = 0
+
+  tags = {
+    Name = "order-processing-queue"
+  }
+}
